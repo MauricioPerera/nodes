@@ -1,6 +1,6 @@
 # n8n Custom Nodes - Agent Memory Bridge
 
-Paquete de nodos personalizados para n8n que proporciona capacidades avanzadas de memoria semántica, embeddings locales y almacenamiento vectorial para agentes de IA.
+Paquete de nodos personalizados para n8n que proporciona capacidades avanzadas de memoria semántica, embeddings locales, almacenamiento vectorial y herramientas de seguridad para agentes de IA.
 
 ## 🚀 Nodos Incluidos
 
@@ -8,62 +8,101 @@ Paquete de nodos personalizados para n8n que proporciona capacidades avanzadas d
 Puente avanzado entre almacenes vectoriales y memoria de agentes de IA con búsqueda semántica, múltiples niveles de memoria y bancos de conocimiento condicionales.
 
 **Características:**
-- ✅ Memoria semántica con búsqueda por similitud
-- ✅ Dos niveles de memoria separados (Agente-Usuario y Agente-Tools)
-- ✅ Múltiples bancos de conocimiento con activación condicional
-- ✅ Skills Knowledge Base para procedimientos/recetas
-- ✅ Deduplicación y caché de respuestas
+- ✅ **Memoria Semántica**: Búsqueda por similitud en lugar de ventana fija
+- ✅ **Niveles de Memoria**: Separación entre memoria Agente-Usuario y Agente-Tools
+- ✅ **Knowledge Bases**: Múltiples bancos con activación condicional
+- ✅ **Skills System**: Base de conocimiento para procedimientos/recetas
+- ✅ **Optimización**: Deduplicación, caché de respuestas y caché de embeddings (SimHash)
+- ✅ **Resiliencia**: Retry logic, timeouts configurables y manejo de errores
+- ✅ **Métricas**: Sistema completo de monitoreo de rendimiento
 
 ### 2. Local Embeddings
 Genera embeddings de texto localmente usando modelos de Hugging Face. 100% local, sin necesidad de APIs externas.
 
 **Características:**
-- ✅ Ejecución 100% local
-- ✅ Modelos pre-entrenados de Hugging Face
-- ✅ Compatible con LangChain
-- ✅ Optimizado para Node.js
+- ✅ **100% Local**: Sin dependencia de servicios externos
+- ✅ **Modelos SOTA**: Acceso a modelos de Hugging Face (e.g. Xenova/multilingual-e5-small)
+- ✅ **Optimizado**: Ejecución eficiente en Node.js
+- ✅ **Estándar**: Compatible con la interfaz de LangChain
 
 ### 3. Vector Store LokiVector
-Almacén vectorial 100% local con búsqueda HNSW. Base de datos embebida con capacidades de búsqueda vectorial.
+Almacén vectorial 100% local con búsqueda HNSW (Hierarchical Navigable Small World). Base de datos embebida de alto rendimiento.
 
 **Características:**
-- ✅ 100% local, sin servicios externos
-- ✅ Búsqueda HNSW eficiente
-- ✅ Persistencia en disco
-- ✅ Compatible con LangChain
+- ✅ **Zero Config**: Base de datos embebida sin infraestructura extra
+- ✅ **Alto Rendimiento**: Búsqueda HNSW eficiente
+- ✅ **Persistencia**: Almacenamiento seguro en disco
+- ✅ **Flexible**: Soporta distancias Euclideana y Coseno
+
+### 4. Secure Code Tool
+Entorno de ejecución seguro (sandbox) para que los agentes escriban y ejecuten código sin riesgos.
+
+**Características:**
+- ✅ **Sandboxing**: Aislamiento completo usando `nsjail`
+- ✅ **Multi-lenguaje**: Soporte para Python, JavaScript y Bash
+- ✅ **Seguridad**: Validación de código y límites de recursos (CPU, RAM, Tiempo)
+- ✅ **Integración**: Diseñado para trabajar con Skills Knowledge Base
+
+### 5. Credential Vault
+Bóveda de credenciales que permite a los agentes utilizar autenticación sin exponer los secretos.
+
+**Características:**
+- ✅ **Privacidad**: El agente usa las credenciales sin leer sus valores
+- ✅ **Control**: Restricción de dominios permitidos
+- ✅ **Versatilidad**: Soporta múltiples tipos de autenticación (OAuth2, Basic, Header, etc.)
+- ✅ **Seguridad**: Inyección segura en tiempo de ejecución
 
 ## 📦 Instalación
 
+Estos nodos están disponibles como paquetes npm independientes. Puedes instalarlos directamente en tu instancia de n8n.
+
+### Nodos Verificados por n8n
+
+| Nodo | Paquete NPM | Enlace |
+|------|-------------|--------|
+| **Agent Memory Bridge** | `n8n-nodes-agent-memory-bridge` | [NPM](https://www.npmjs.com/package/n8n-nodes-agent-memory-bridge) |
+| **Credential Vault** | `n8n-nodes-credential-vault` | [NPM](https://www.npmjs.com/package/n8n-nodes-credential-vault) |
+
+### Nodos de la Comunidad
+
+| Nodo | Paquete NPM | Enlace |
+|------|-------------|--------|
+| **Local Embeddings** | `n8n-nodes-local-embeddings` | [NPM](https://www.npmjs.com/package/n8n-nodes-local-embeddings) |
+| **LokiVector Store** | `n8n-nodes-lokivector-store` | [NPM](https://www.npmjs.com/package/n8n-nodes-lokivector-store) |
+| **Secure Code Tool** | `n8n-nodes-secure-code-tool` | [NPM](https://www.npmjs.com/package/n8n-nodes-secure-code-tool) |
+
+### Cómo instalar en n8n
+
+Para instalar estos nodos en tu instancia de n8n:
+
+1. Ve a **Settings** > **Community Nodes**.
+2. Haz clic en **Install**.
+3. Pega el nombre del paquete npm (ej. `n8n-nodes-agent-memory-bridge`).
+4. Haz clic en **Install**.
+
+Alternativamente, si usas Docker, puedes instalarlos montando un volumen o extendiendo la imagen:
+
 ```bash
-# Clonar el repositorio
-git clone <repository-url>
-cd "n8n nodes/agent memory bridge"
-
-# Instalar dependencias
-cd n8n-nodes-starter
-npm install
-
-# Compilar
-npm run build
-
-# Desplegar a n8n global
-cd ..
-./deploy-to-n8n.sh
+# Ejemplo en el directorio custom de n8n
+cd ~/.n8n/custom
+npm install n8n-nodes-agent-memory-bridge n8n-nodes-credential-vault
 ```
 
 ## 🎯 Uso Rápido
 
-### Flujo Básico: Agente con Memoria Semántica
+### Flujo Completo: Agente Avanzado
 
 ```
 Local Embeddings → Vector Store LokiVector → Agent Memory Bridge → AI Agent
+                                                    ↓
+                                            Secure Code Tool
 ```
 
 1. **Configura Local Embeddings**
    - Model Name: `Xenova/multilingual-e5-small`
 
 2. **Crea Vector Store**
-   - Mode: `insert` (para cargar documentos)
+   - Mode: `insert` (para cargar documentos/skills)
    - Database Path: `./vectors.db`
 
 3. **Configura Agent Memory Bridge**
@@ -73,12 +112,20 @@ Local Embeddings → Vector Store LokiVector → Agent Memory Bridge → AI Agen
 
 4. **Conecta AI Agent**
    - Conecta la salida de Memory Bridge al input Memory del Agent
+   - Conecta Secure Code Tool como herramienta
 
 ## 📚 Documentación Completa
 
-Para documentación detallada de cada nodo, consulta [DOCUMENTACION.md](./DOCUMENTACION.md)
+Para documentación detallada de cada nodo y ejemplos avanzados, consulta:
 
-## 🔧 Desarrollo
+- [Documentación General](./DOCUMENTACION.md)
+- [Secure Code Tool](./SECURE_CODE_TOOL.md)
+- [Credential Vault](./CREDENTIAL_VAULT.md)
+- [Análisis LokiVector](./ANALISIS_LOKIVECTOR.md)
+
+## 🔧 Desarrollo (Opcional)
+
+Si deseas contribuir o modificar el código fuente:
 
 ### Compilar
 
@@ -87,86 +134,9 @@ cd n8n-nodes-starter
 npm run build
 ```
 
-### Desplegar
-
-```bash
-./deploy-to-n8n.sh
-```
-
 ### Desarrollo con Hot Reload
 
 ```bash
 cd n8n-nodes-starter
 npm run dev
 ```
-
-## 📋 Requisitos
-
-- Node.js 18+
-- n8n instalado globalmente
-- ~500MB de espacio en disco (para modelos de embeddings)
-
-## 🎨 Ejemplos
-
-### Ejemplo 1: Memoria Básica
-```yaml
-Local Embeddings
-  └─> Vector Store LokiVector
-      └─> Agent Memory Bridge
-          └─> AI Agent
-```
-
-### Ejemplo 2: Con Tools Memory
-```yaml
-Local Embeddings
-  ├─> Vector Store (Conversación)
-  └─> Tools Vector Store
-      └─> Agent Memory Bridge (Separate Tools Memory: true)
-          └─> AI Agent
-```
-
-### Ejemplo 3: Múltiples Knowledge Bases
-```yaml
-Local Embeddings
-  ├─> KB Premium (condición: userType === "premium")
-  ├─> KB Free (condición: userType === "free")
-  └─> KB Español (condición: language === "es")
-      └─> Agent Memory Bridge
-          └─> AI Agent
-```
-
-## 🐛 Troubleshooting
-
-### El nodo no aparece en n8n
-- Verifica que n8n esté corriendo: `n8n start`
-- Verifica que el despliegue fue exitoso: `./deploy-to-n8n.sh`
-- Revisa los logs: `/tmp/n8n_deploy.log`
-
-### Error al cargar modelo de embeddings
-- Verifica tu conexión a internet (primera descarga)
-- Verifica que tienes suficiente espacio en disco
-- Prueba con un modelo más pequeño
-
-### Búsquedas vectoriales lentas
-- Reduce `efSearch` en Vector Store LokiVector
-- Reduce `Top K` en Agent Memory Bridge
-- Considera usar un modelo de embeddings más pequeño
-
-## 📝 Licencia
-
-MIT
-
-## 🤝 Contribuciones
-
-Las contribuciones son bienvenidas. Por favor, abre un issue o pull request.
-
-## 📧 Soporte
-
-Para problemas o preguntas:
-- Abre un issue en el repositorio
-- Consulta la [documentación completa](./DOCUMENTACION.md)
-- Revisa los logs de n8n
-
----
-
-**Nota**: Este paquete está en desarrollo activo. Algunas características pueden cambiar.
